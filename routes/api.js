@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const models = require('../models')
+const models = require('../models');
+const path  = require('path');
 
 /* GET users listing. */
 router.get('/phonebooks', async (req, res, next) => {
@@ -20,7 +21,8 @@ router.get('/phonebooks', async (req, res, next) => {
             page,
             limit,
             pages,
-            total
+            total,
+            status: 'Succes Showing Data Users'
         })
     } catch (error) {
         console.log(error)
@@ -35,7 +37,10 @@ router.post('/phonebooks', async (req, res, next) => {
             name: name,
             phone: phone
         })
-        res.status(201).json(users)
+        res.status(201).json({
+            users,
+            status: 'Succes Creating Data User'
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Error Creating Data User" })
@@ -56,7 +61,10 @@ router.put('/phonebooks/:id', async (req, res, next) => {
             returning: true,
             plain: true
         })
-        res.status(201).json(users[1])
+        res.status(201).json({
+            user: users[1],
+            status: "Success Updating Data User"
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Error Updating Data User" })
@@ -66,17 +74,29 @@ router.put('/phonebooks/:id', async (req, res, next) => {
 router.put('/phonebooks/:id/avatar', async (req, res, next) => {
     try {
         const { id } = req.params
-        const { avatar } = req.body
-        const users = await models.Api.update({
-            avatar: avatar
-        }, {
-            where: {
-                id
-            },
-            returning: true,
-            plain: true
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send('No Files Were Uploaded')
+        }
+        const sampleFile = req.files.avatar
+        const fileName = `${Date.now()}-${sampleFile.name}`
+        const uploadPath = path.join(__dirname, '..', 'public', 'images', fileName)
+
+        sampleFile.mv(uploadPath, async (err) => {
+            if(err){
+                return res.status(500).send(err)
+            }
         })
-        res.status(201).json(users[1])
+        const updateAvatar = await models.Api.findByPk(id)
+
+        if(!updateAvatar){
+            return res.status(404).json({error : 'User Not Found'})
+        }
+        updateAvatar.avatar = fileName;
+        await updateAvatar.save();
+        res.status(201).json({
+            user: updateAvatar,
+            status: 'Success Updating Avatar User'
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Error Updating Data User" })
@@ -93,7 +113,10 @@ router.get('/phonebooks/:id', async (req, res, next) => {
             returning: true,
             plain: true
         })
-        res.status(201).json(users)
+        res.status(201).json({
+            user: users,
+            status: 'Succesing Showing Data User'
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Error Updating Data User" })
@@ -108,7 +131,10 @@ router.delete('/phonebooks/:id', async (req, res, next) => {
                 id
             }
         })
-        res.status(200).json(users)
+        res.status(200).json({
+            user: users,
+            success: 'Success Deleting Data User'
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Error Deleting Data User" })
