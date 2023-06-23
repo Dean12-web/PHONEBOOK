@@ -3,45 +3,54 @@ var router = express.Router();
 const models = require('../models');
 const path = require('path');
 const { Op } = require('sequelize');
-const {Response} = require('../helpers/util')
+const { Response } = require('../helpers/util')
 
 /* GET users listing. */
 router.get('/phonebooks', async (req, res, next) => {
     try {
-        let params = {}
-        let sortBy = req.query.sortBy || 'id'
-        let sortMode = req.query.sortMode || 'asc'
-        if (req.query.name) {
-            params.name = { [Op.like]: `%${req.query.name}%` }
-        }
+        const { name, phone } = req.query;
+        let params = {};
+        let sortBy = req.query.sortBy || 'id';
+        let sortMode = req.query.sortMode || 'asc';
 
-        if (req.query.phone) {
-            params.phone = { [Op.like]: `%${req.query.phone}%` }
+        if (name && phone) {
+            params = {
+                name: { [Op.iLike]: `%${name}%` },
+                phone: { [Op.iLike]: `%${phone}%` },
+            };
+        } else if (name) {
+            params.name = { [Op.iLike]: `%${name}%` };
+        } else if (phone) {
+            params.phone = { [Op.iLike]: `%${phone}%` };
         }
-        const total = await models.Api.count()
-        const page = parseInt(req.query.page) || 1
-        const limit = 5
-        const offset = (page - 1) * limit
-        const pages = Math.ceil(total / limit)
+        console.log(params)
+        const total = await models.Api.count();
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+        const pages = Math.ceil(total / limit);
+
         const users = await models.Api.findAll({
-            where:params,
+            where: params,
             order: [[sortBy, sortMode]],
             limit,
-            offset
-        })
+            offset,
+        });
+
         res.status(200).json(new Response({
             users,
             page,
             limit,
             pages,
             total,
-            success : 'Succes Showing Data User'
-        }))
+            success: 'Success Showing Data User',
+        }));
     } catch (error) {
-        console.log(error)
-        res.status(500).json(new Response("Error Showing Data User", false))
+        console.log(error);
+        res.status(500).json(new Response('Error Showing Data User', false));
     }
 });
+
 
 router.post('/phonebooks', async (req, res, next) => {
     try {
