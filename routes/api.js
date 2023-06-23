@@ -3,6 +3,7 @@ var router = express.Router();
 const models = require('../models');
 const path = require('path');
 const { Op } = require('sequelize');
+const {Response} = require('../helpers/util')
 
 /* GET users listing. */
 router.get('/phonebooks', async (req, res, next) => {
@@ -28,19 +29,17 @@ router.get('/phonebooks', async (req, res, next) => {
             limit,
             offset
         })
-        console.log('Ini sort By',sortBy)
-        console.log('Ini sort Mode',sortMode)
-        res.status(200).json({
+        res.status(200).json(new Response({
             users,
             page,
             limit,
             pages,
             total,
-            status: 'Succes Showing Data Users'
-        })
+            success : 'Succes Showing Data User'
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Showing Data User" })
+        res.status(500).json(new Response("Error Showing Data User", false))
     }
 });
 
@@ -51,13 +50,13 @@ router.post('/phonebooks', async (req, res, next) => {
             name: name,
             phone: phone
         })
-        res.status(201).json({
+        res.status(201).json(new Response({
             users,
-            status: 'Succes Creating Data User'
-        })
+            succes: 'Succes Creating Data User'
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Creating Data User" })
+        res.status(500).json(new Response("Error Creating Data User", false))
     }
 });
 
@@ -75,13 +74,13 @@ router.put('/phonebooks/:id', async (req, res, next) => {
             returning: true,
             plain: true
         })
-        res.status(201).json({
+        res.status(201).json(new Response({
             user: users[1],
-            status: "Success Updating Data User"
-        })
+            success: 'Success Updating Data User'
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Updating Data User" })
+        res.status(500).json(new Response("Error Updating Data User", false))
     }
 });
 
@@ -89,7 +88,7 @@ router.put('/phonebooks/:id/avatar', async (req, res, next) => {
     try {
         const { id } = req.params
         if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send('No Files Were Uploaded')
+            return res.status(400).send(new Response('No Files Were Uploaded', false))
         }
         const sampleFile = req.files.avatar
         const fileName = `${Date.now()}-${sampleFile.name}`
@@ -103,17 +102,17 @@ router.put('/phonebooks/:id/avatar', async (req, res, next) => {
         const updateAvatar = await models.Api.findByPk(id)
 
         if (!updateAvatar) {
-            return res.status(404).json({ error: 'User Not Found' })
+            return res.status(404).json(new Response('User Not Found', false))
         }
         updateAvatar.avatar = fileName;
         await updateAvatar.save();
-        res.status(201).json({
+        res.status(201).json(new Response({
             user: updateAvatar,
             status: 'Success Updating Avatar User'
-        })
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Updating Data User" })
+        res.status(500).json(new Response("Error Updating Data User", false))
     }
 });
 
@@ -127,13 +126,13 @@ router.get('/phonebooks/:id', async (req, res, next) => {
             returning: true,
             plain: true
         })
-        res.status(201).json({
+        res.status(201).json(new Response({
             user: users,
             status: 'Succesing Showing Data User'
-        })
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Updating Data User" })
+        res.status(500).json(new Response("Error Updating Data User", false))
     }
 });
 
@@ -145,13 +144,13 @@ router.delete('/phonebooks/:id', async (req, res, next) => {
                 id
             }
         })
-        res.status(200).json({
+        res.status(200).json(new Response({
             user: users,
             success: 'Success Deleting Data User'
-        })
+        }))
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: "Error Deleting Data User" })
+        res.status(500).json(new Response("Error Deleting Data User", false))
     }
 });
 
