@@ -1,21 +1,35 @@
 var express = require('express');
 var router = express.Router();
 const models = require('../models');
-const path  = require('path');
+const path = require('path');
+const { Op } = require('sequelize');
 
 /* GET users listing. */
 router.get('/phonebooks', async (req, res, next) => {
     try {
+        let params = {}
+        let sortBy = req.query.sortBy || 'id'
+        let sortMode = req.query.sortMode || 'asc'
+        if (req.query.name) {
+            params.name = { [Op.like]: `%${req.query.name}%` }
+        }
+
+        if (req.query.phone) {
+            params.phone = { [Op.like]: `%${req.query.phone}%` }
+        }
         const total = await models.Api.count()
         const page = parseInt(req.query.page) || 1
         const limit = 5
         const offset = (page - 1) * limit
         const pages = Math.ceil(total / limit)
         const users = await models.Api.findAll({
-            order: [['id', 'asc']],
+            where:params,
+            order: [[sortBy, sortMode]],
             limit,
             offset
         })
+        console.log('Ini sort By',sortBy)
+        console.log('Ini sort Mode',sortMode)
         res.status(200).json({
             users,
             page,
@@ -82,14 +96,14 @@ router.put('/phonebooks/:id/avatar', async (req, res, next) => {
         const uploadPath = path.join(__dirname, '..', 'public', 'images', fileName)
 
         sampleFile.mv(uploadPath, async (err) => {
-            if(err){
+            if (err) {
                 return res.status(500).send(err)
             }
         })
         const updateAvatar = await models.Api.findByPk(id)
 
-        if(!updateAvatar){
-            return res.status(404).json({error : 'User Not Found'})
+        if (!updateAvatar) {
+            return res.status(404).json({ error: 'User Not Found' })
         }
         updateAvatar.avatar = fileName;
         await updateAvatar.save();
