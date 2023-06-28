@@ -1,226 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phonebook</title>
+    <title>Flexbox Card Example</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/6ea2cb925f.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
     <style>
-        .btn-brown {
-            --bs-btn-color: #fff;
-            --bs-btn-bg: #a57722;
-            --bs-btn-border-color: #a57722;
-            --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: #a57722;
-            --bs-btn-hover-border-color: #a57722;
-            --bs-btn-focus-shadow-rgb: 217, 164, 6;
-            --bs-btn-active-color: #fff;
-            --bs-btn-active-bg: #a57722;
-            --bs-btn-active-border-color: #a57722;
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: #fff;
-            --bs-btn-disabled-bg: #a57722;
-            --bs-btn-disabled-border-color: #a57722;
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .input-icons i {
-            position: absolute;
+        .flex-item {
+            flex: 1;
         }
 
-        .input-icons {
-            width: 100%;
-            margin-bottom: 10px;
+        .input-wrapper {
+            flex-basis: 70%;
         }
 
-        .icon {
-            padding: 15px;
-            min-width: 40px;
-        }
-
-        .input-field {
-            width: 100%;
+        .card {
+            display: flex;
+            flex-direction: row;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             padding: 10px;
-            text-align: center;
+            width: 300px;
+            margin: auto;
         }
 
-        img {
-            max-width: 200px;
-            max-height: 200px;
+        .image {
+            flex-basis: 30%;
+            padding: 10px;
         }
 
-        .bg-abu {
-            --bs-bg-opacity: 1;
-            background-color: #c5c5c5;
+        .info {
+            flex-basis: 70%;
+            padding: 10px;
         }
+
+        ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-right: 10px;
+        }
+
+        /* Media queries for different screen sizes */
+        @media (min-width: 1200px) {
+
+            /* Web view */
+            ul {
+                flex-wrap: wrap;
+            }
+
+            li {
+                flex-basis: 20%;
+            }
+        }
+
+
+        @media (max-width: 1199px) {
+
+            /* Tablet view */
+            ul {
+                flex-wrap: wrap;
+            }
+
+            li {
+                flex-basis: 33.33%;
+            }
+        }
+
     </style>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row mt-3">
-            <div class="col-sm-2">
-                <button class="btn btn-brown float-end">
-                    <span class="fa-solid fa-arrow-up-z-a text-black"></span>
-                </button>
-            </div>
-            <div class="col-sm-8">
-                <div class="input-icons">
-                    <i class="fa fa-magnifying-glass icon"></i>
-                    <input type="text" class="form-control input-field" name="" id="">
+    <div class="container">
+        <header>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <button class="btn btn-warning float-end me-3">
+                        <span class="fa-solid fa-arrow-up-z-a text-black"></span>
+                    </button>
+                </div>
+                <div class="flex-item input-wrapper">
+                    <input type="text" class="form-control">
+                </div>
+                <div class="flex-item">
+                    <button class="btn btn-warning ms-3">
+                        <span class="fa-solid fa-user-plus text-black"></span>
+                    </button>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <button class="btn btn-brown">
-                    <span class="fa-solid fa-user-plus text-black"></span>
-                </button>
-            </div>
-        </div>
-        <div class="row justify-content-md-center mt-3 mb-3">
-            <div class="col-sm-2 me-3">
-                <div class="row">
-                    <div class="card bg-abu">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <img id="image" class="img-fluid" src="" alt="Image">
-                                </div>
-                                <div class="col-sm-8">
-                                    <span>Aku</span><br>
-                                    <span>082387803094</span><br>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-
-                        </div>
+        </header>
+        <main class="mt-3">
+            <ul>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-2 me-3">
-                <div class="row">
-                    <div class="card bg-abu">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <img id="image" class="img-fluid" src="" alt="Image">
-                                </div>
-                                <div class="col-sm-8">
-                                    <span>Aku</span><br>
-                                    <span>082387803094</span><br>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-2 me-3">
-                <div class="row">
-                    <div class="card bg-abu">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <img id="image" class="img-fluid" src="" alt="Image">
-                                </div>
-                                <div class="col-sm-8">
-                                    <span>Aku</span><br>
-                                    <span>082387803094</span><br>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-
-                        </div>
+                </li>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-2 me-3">
-                <div class="row">
-                    <div class="card bg-abu">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <img id="image" class="img-fluid" src="" alt="Image">
-                                </div>
-                                <div class="col-sm-8">
-                                    <span>Aku</span><br>
-                                    <span>082387803094</span><br>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-2 me-3">
-                <div class="row">
-                    <div class="card bg-abu">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <img id="image" class="img-fluid" src="" alt="Image">
-                                </div>
-                                <div class="col-sm-8">
-                                    <span>Aku</span><br>
-                                    <span>082387803094</span><br>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-
-                        </div>
+                </li>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
                     </div>
-                </div>
-            </div>
-        </div>
-        <form>
-            <div class="row mb-3 justify-content-md-center">
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="name" placeholder="Insert Name..." >
-                </div>
-            </div>
-            <div class="row mb-3 justify-content-md-center">
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="phone" placeholder="Insert Phone...">
-                </div>
-            </div>
-            <div class="row justify-content-md-center">
-                <div class="col-md-5 d-grid gap-2 ">
-                    <button class="btn btn-brown">Save</button>
-                </div>
-                <div class="col-md-5 d-grid gap-2">
-                    <button class="btn btn-brown">Cancel</button>
-                </div>
-            </div>
-        </form>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
+                    </div>
+                </li>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
+                    </div>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
+                    </div>
+                </li>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
+                    </div>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
+                    </div>
+                </li>
+                <li class="card bg-secondary">
+                    <div class="image">
+                        <img src="profile.png" class="img-fluid" alt="Image 2">
+                    </div>
+                    <div class="info">
+                        <span>Name</span><br>
+                        <span>0823741311</span><br>
+                        <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                        <button class="btn btn-xs"><i class="fa-solid fa-trash fa-xs"></i></button>
+                    </div>
+                </li>
+            </ul>
+        </main>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var imageElements = document.querySelectorAll("#image");
-            var imageUrl = "profile.png"; // Path to your default image
-
-            // Loop through all the image elements
-            imageElements.forEach(function (imageElement) {
-                // Check if the image URL is null or empty
-                if (!imageUrl.trim()) {
-                    imageElement.src = imageUrl;
-                } else {
-                    // Image URL is null or empty, display the default image
-                    imageElement.src = "profile.png";
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

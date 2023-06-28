@@ -11,3 +11,117 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.btn-brown {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #a57722;
+  --bs-btn-border-color: #a57722;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #a57722;
+  --bs-btn-hover-border-color: #a57722;
+  --bs-btn-focus-shadow-rgb: 217, 164, 6;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #a57722;
+  --bs-btn-active-border-color: #a57722;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #a57722;
+  --bs-btn-disabled-border-color: #a57722;
+}
+
+.input-icons i {
+  position: absolute;
+}
+
+.input-icons {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.icon {
+  padding: 15px;
+  min-width: 40px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.no-border {
+  border: none;
+}
+
+.number-font {
+  font-size: 11px;
+}
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-item {
+  flex: 1;
+}
+
+.input-wrapper {
+  flex-basis: 70%;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 300px;
+  margin: auto;
+}
+
+.image {
+  flex-basis: 30%;
+  padding: 10px;
+}
+
+.info {
+  flex-basis: 70%;
+  padding: 10px;
+}
+
+ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-right: 10px;
+}
+
+/* Media queries for different screen sizes */
+@media (min-width: 1200px) {
+
+  /* Web view */
+  ul {
+      flex-wrap: wrap;
+  }
+
+  li {
+      flex-basis: 20%;
+  }
+}
+
+
+@media (max-width: 1199px) {
+
+  /* Tablet view */
+  ul {
+      flex-wrap: wrap;
+  }
+
+  li {
+      flex-basis: 33.33%;
+  }
+}
