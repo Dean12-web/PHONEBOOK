@@ -7,21 +7,31 @@ export default function PhoneBox() {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/phonebooks`).then((response) =>{
-            if(response.data.success){
+        axios.get(`http://localhost:3001/api/phonebooks`).then((response) => {
+            if (response.data.success) {
                 setData(response.data.data.users)
             }
         })
-        
-    },[])
-    // console.log(data)
+
+    }, [])
+
+    const removeUser = (id) => {
+        axios.delete(`http://localhost:3001/api/phonebooks/${id}`).then((response) => {
+            setData(data.filter(item => item.id !== id))
+        }).catch(() => {
+            alert('Hapus Gagal')
+        })
+    }
+
     return (
         <div className="container">
             <header>
                 <PhoneHeader />
             </header>
             <main className="mt-3">
-                <PhoneList users = {data}/>
+                <PhoneList
+                    users={data}
+                    remove={removeUser}/>
             </main>
         </div>
     )

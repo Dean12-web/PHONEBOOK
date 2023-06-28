@@ -1,4 +1,4 @@
-export default function PhoneItem({ user }) {
+export default function PhoneItem({ user, remove }) {
     return (
         <li className="card bg-secondary mb-1">
             <div className="image">
@@ -8,7 +8,9 @@ export default function PhoneItem({ user }) {
             <div className="info">
                 <span>{user.name}</span><br />
                 <span>{user.phone}</span><br />
-            </div>
-        </li>
+                <button class="btn btn-xs"><i class="fa-solid fa-pen-to-square fa-xs"></i></button>
+                <button class="btn btn-xs" type="button" onClick={remove}><i class="fa-solid fa-trash fa-xs"></i></button>
+        </div>
+        </li >
     )
 }
