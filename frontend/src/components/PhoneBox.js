@@ -13,7 +13,21 @@ export default function PhoneBox() {
             }
         })
 
-    }, [])
+    }, [data])
+
+    const updateUser = (id,name, phone) => {
+        axios.put(`http://localhost:3001/api/phonebooks/${id}`, {name, phone}).then((response) => {
+            setData(currentData => currentData.map(item => {
+                if(item.id === id){
+                    item.name = response.data.data.name
+                    item.phone = response.data.data.phone
+                }
+                return item
+            }))
+        }).catch(() => {
+            alert('Update Gagal')
+        })
+    }
 
     const removeUser = (id) => {
         axios.delete(`http://localhost:3001/api/phonebooks/${id}`).then((response) => {
@@ -24,13 +38,14 @@ export default function PhoneBox() {
     }
 
     return (
-        <div className="container">
+        <div className="container mt-3">
             <header>
                 <PhoneHeader />
             </header>
             <main className="mt-3">
                 <PhoneList
                     users={data}
+                    update = {updateUser}
                     remove={removeUser}/>
             </main>
         </div>

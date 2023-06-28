@@ -49,13 +49,7 @@ code {
   text-align: center;
 }
 
-.no-border {
-  border: none;
-}
 
-.number-font {
-  font-size: 11px;
-}
 .flex-container {
   display: flex;
   justify-content: space-between;
