@@ -31,6 +31,7 @@ router.get('/phonebooks', async (req, res, next) => {
         const pages = Math.ceil(total / limit);
 
         const users = await models.Api.findAll({
+            attributes: ['id', 'name', 'phone', 'avatar'],
             where: params,
             order: [[sortBy, sortMode]],
             limit,

@@ -1,14 +1,13 @@
-export default function PhoneItem() {
+export default function PhoneItem({ user }) {
     return (
-        <li className="card bg-secondary">
+        <li className="card bg-secondary mb-1">
             <div className="image">
-                <img src="profile.png" className="img-fluid" alt="" />
+                <img src={user.avatar ? `http://localhost:3001/images/${user.avatar}` : '/profile.png'}
+                    className="img-fluid" alt="" />
             </div>
             <div className="info">
-                <span>Name</span><br />
-                <span>0823741311</span><br />
-                <button className="btn btn-xs"><i className="fa-solid fa-pen-to-square fa-xs"></i></button>
-                <button className="btn btn-xs"><i className="fa-solid fa-trash fa-xs"></i></button>
+                <span>{user.name}</span><br />
+                <span>{user.phone}</span><br />
             </div>
         </li>
     )

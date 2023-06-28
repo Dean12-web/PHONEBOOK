@@ -1,8 +1,12 @@
 import PhoneItem from "./PhoneItem"
-export default function PhoneList() {
+export default function PhoneList({ users }) {
     return (
         <ul>
-            <PhoneItem />
+            {
+                users.map((user) => (
+                    <PhoneItem key={user.id} user={user} />
+                ))
+            }
         </ul>
     )
 }
