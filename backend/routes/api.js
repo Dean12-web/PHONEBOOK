@@ -32,10 +32,10 @@ router.get('/phonebooks', async (req, res, next) => {
 
         const users = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
-            where: params,
-            order: [[sortBy, sortMode]],
-            limit,
-            offset,
+            // where: params,
+            order: [['id', 'DESC']],
+            // limit,
+            // offset,
         });
 
         res.status(200).json(new Response({

@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 // import App from './App';
-import PhoneBox from './components/PhoneBox';
 import reportWebVitals from './reportWebVitals';
+import PhoneBox from './components/PhoneBox';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -94,6 +94,28 @@ li {
   margin-right: 10px;
 }
 
+.form-parent{
+  display: flex;
+  flex-direction: column;
+}
+
+.form-child{
+  display: flex;
+  margin-bottom: 10px;
+}
+.form-item{
+  flex:1
+}
+.form-item-input{
+  width:100%;
+}
+.form-btn-1{
+  width: 98%;
+}
+.form-btn-2{
+  width:100%
+}
+
 /* Media queries for different screen sizes */
 @media (min-width: 1200px) {
 
