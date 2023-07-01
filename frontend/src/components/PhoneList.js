@@ -1,5 +1,5 @@
 import PhoneItem from "./PhoneItem"
-export default function PhoneList({ users, remove, update }) {
+export default function PhoneList({ users, remove, update}) {
     return (
         <ul>
             {
@@ -10,6 +10,7 @@ export default function PhoneList({ users, remove, update }) {
                         update = {update}
                         remove={() => remove(user.id)}/>
                 ))
+
             }
         </ul>
     )

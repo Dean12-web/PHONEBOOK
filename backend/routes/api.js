@@ -23,7 +23,7 @@ router.get('/phonebooks', async (req, res, next) => {
         } else if (phone) {
             params.phone = { [Op.iLike]: `%${phone}%` };
         }
-        console.log(params)
+        // console.log(params)
         const total = await models.Api.count();
         const page = parseInt(req.query.page) || 1;
         const limit = 5;
@@ -32,10 +32,10 @@ router.get('/phonebooks', async (req, res, next) => {
 
         const users = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
-            // where: params,
+            where: params,
             order: [['id', 'DESC']],
-            // limit,
-            // offset,
+            limit,
+            offset,
         });
 
         res.status(200).json(new Response({
