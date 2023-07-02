@@ -23,23 +23,22 @@ router.get('/phonebooks', async (req, res, next) => {
         } else if (phone) {
             params.phone = { [Op.iLike]: `%${phone}%` };
         }
-        // console.log(params)
+
         const total = await models.Api.count();
         const page = parseInt(req.query.page) || 1;
         const limit = 5;
         const offset = (page - 1) * limit;
         const pages = Math.ceil(total / limit);
 
-        const users = await models.Api.findAll({
+        const phonebooks = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
-            where: params,
+            // where: params,
             order: [['id', 'DESC']],
-            limit,
-            offset,
+            // limit,
+            // offset,
         });
-
         res.status(200).json(new Response({
-            users,
+            phonebooks,
             page,
             limit,
             pages,
@@ -51,7 +50,6 @@ router.get('/phonebooks', async (req, res, next) => {
         res.status(500).json(new Response('Error Showing Data User', false));
     }
 });
-
 
 router.post('/phonebooks', async (req, res, next) => {
     try {

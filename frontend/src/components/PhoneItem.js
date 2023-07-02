@@ -1,15 +1,37 @@
-import { useState} from "react"
-export default function PhoneItem({ user, remove, update }) {
+import { useState } from "react"
+import axios from "axios"
+export default function PhoneItem({ user, remove, update, updateAvatar }) {
     const [isEdit, setIsEdit] = useState(false)
     const [name, setName] = useState(user.name)
     const [phone, setPhone] = useState(user.phone)
+    const handleImageClick = () => {
+        const fileInput = document.createElement("input")
+        fileInput.type = "file"
+        fileInput.accept = "image/*"
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0]
+            const formData = new FormData()
+            formData.append("avatar", file)
 
-
+            axios
+                .put(`http://localhost:3001/api/phonebooks/${user.id}/avatar`, formData)
+                .then((response) => {
+                    updateAvatar(user.id, response.data.data.avatar)
+                })
+                .catch(() => {
+                    
+                })
+                window.location.reload(); // Refresh the page
+        })
+        fileInput.click()
+    }
     return (
         <li className="card bg-secondary mb-1">
             <div className="image">
                 <img src={user.avatar ? `http://localhost:3001/images/${user.avatar}` : '/profile.png'}
-                    className="img-fluid" alt="" />
+                    className="img-fluid"
+                    alt=""
+                    onClick={handleImageClick} />
             </div>
             <div className="info">
                 <span>{isEdit ? (

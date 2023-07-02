@@ -8,6 +8,7 @@ import PhoneForm from './components/PhoneForm';
 
 function Layout() {
     const navigate = useNavigate()
+
     return (
         <div className='container'>
             <header>
@@ -46,14 +47,20 @@ function App() {
     const [refreshFlag, setRefreshFlag] = useState(false); //Handling For Update Data, make the data refreshed manually when update
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/phonebooks`).then((response) => {
-            if (response.data.success) {
-                setData(response.data.data.users)
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/api/phonebooks');
+                if (response.data.success) {
+                    setData(response.data.data.phonebooks);
+                }
+            } catch (error) {
+                setData([]);
             }
-        }).catch(() => {
-            setData([])
-        })
-    }, [refreshFlag])
+        };
+
+        fetchData();
+    }, [refreshFlag]);
+
 
     const addUser = (name, phone) => {
         const id = parseInt(Date.now())
@@ -106,7 +113,7 @@ function App() {
                         data={data}
                         updateUser={updateUser}
                         removeUser={removeUser} />} />
-                    <Route path="add" element={<PhoneForm  add={addUser} /> } />
+                    <Route path="add" element={<PhoneForm add={addUser} />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
