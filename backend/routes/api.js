@@ -32,10 +32,10 @@ router.get('/phonebooks', async (req, res, next) => {
 
         const phonebooks = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
-            // where: params,
+            where: params,
             order: [['id', 'DESC']],
-            // limit,
-            // offset,
+            limit,
+            offset,
         });
         res.status(200).json(new Response({
             phonebooks,

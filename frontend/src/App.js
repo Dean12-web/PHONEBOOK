@@ -47,15 +47,14 @@ function App() {
     const [refreshFlag, setRefreshFlag] = useState(false); //Handling For Update Data, make the data refreshed manually when update
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/api/phonebooks');
+        const fetchData = () => {
+            axios.get('http://localhost:3001/api/phonebooks').then((response)=>{
                 if (response.data.success) {
                     setData(response.data.data.phonebooks);
                 }
-            } catch (error) {
-                setData([]);
-            }
+            }).catch((error)=> {
+                setData([])
+            })
         };
 
         fetchData();
