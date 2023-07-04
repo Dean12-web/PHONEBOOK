@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Outlet, Route, Routes, useNavigate } from "react-router-dom"
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from "axios"
 import PhoneBox from './components/PhoneBox';
 import PhoneForm from './components/PhoneForm';
@@ -45,20 +45,46 @@ function NotFound() {
 function App() {
     const [data, setData] = useState([])
     const [refreshFlag, setRefreshFlag] = useState(false); //Handling For Update Data, make the data refreshed manually when update
-
+    const listInnerRef = useRef()
+    const [currPage, setCurrPage] = useState(1)
+    const [prevPage, setPrevPage] = useState(0)
+    const [lastList, setLastList] = useState(false)
     useEffect(() => {
         const fetchData = () => {
-            axios.get('http://localhost:3001/api/phonebooks').then((response)=>{
-                if (response.data.success) {
-                    setData(response.data.data.phonebooks);
+            // console.log("Fetching data for page:", currPage); // check the current page value
+            axios.get(`http://localhost:3001/api/phonebooks?page=${currPage}`).then((response)=>{
+                if (!response.data.success) {
+                    setLastList(true)
+                    return
+                }
+                console.log(response.data.data.phonebooks, "Paginate")
+                console.log("onPage = ", currPage)
+                setPrevPage(currPage)
+                setData([...data,...response.data.data.phonebooks]);
+
+                const totalPages = Math.ceil(response.data.data.total / response.data.data.limit)
+                if(currPage >= totalPages){
+                    setLastList(true)
+                    return
                 }
             }).catch((error)=> {
                 setData([])
             })
         };
+        if(!lastList && prevPage !== currPage){
+            fetchData();
+        }
+    }, [currPage, lastList, prevPage, data, refreshFlag]);
 
-        fetchData();
-    }, [refreshFlag]);
+    const onScroll = () => {
+        if(listInnerRef.current){
+            const {scrollTop, scrollHeight, clientHeight} = listInnerRef.current
+            // console.log(scrollTop + clientHeight , scrollHeight)
+            if(scrollTop + clientHeight + 100 > scrollHeight){
+                setCurrPage(currPage + 1)
+            }
+        }
+    }
 
 
     const addUser = (name, phone) => {
@@ -111,7 +137,10 @@ function App() {
                     <Route index element={<PhoneBox
                         data={data}
                         updateUser={updateUser}
-                        removeUser={removeUser} />} />
+                        removeUser={removeUser}
+                        onScroll={onScroll}
+                        listInnerRef={listInnerRef}
+                        />} />
                     <Route path="add" element={<PhoneForm add={addUser} />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
