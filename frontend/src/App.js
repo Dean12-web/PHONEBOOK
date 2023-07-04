@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Outlet, Route, Routes, useNavigate } from "react-router-dom"
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from "axios"
 import PhoneBox from './components/PhoneBox';
 import PhoneForm from './components/PhoneForm';
@@ -45,20 +45,52 @@ function NotFound() {
 function App() {
     const [data, setData] = useState([])
     const [refreshFlag, setRefreshFlag] = useState(false); //Handling For Update Data, make the data refreshed manually when update
-
+    const [page, setPage] = useState(1)
+    const [isLoading, setIsLoading] = useState(false)
+    const containerRef = useRef(null)
     useEffect(() => {
         const fetchData = () => {
-            axios.get('http://localhost:3001/api/phonebooks').then((response)=>{
+            setIsLoading(true)
+            axios.get(`http://localhost:3001/api/phonebooks?page=${page}`).then((response) => {
                 if (response.data.success) {
                     setData(response.data.data.phonebooks);
                 }
-            }).catch((error)=> {
+                console.log('Ini Page', page)
+                setIsLoading(false)
+            }).catch((error) => {
                 setData([])
+                setIsLoading(false)
             })
         };
 
         fetchData();
-    }, [refreshFlag]);
+    }, [refreshFlag, page]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
+            if (scrollTop + clientHeight >= scrollHeight - 5) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        };
+
+        const containerElement = containerRef.current;
+        if (containerElement) {
+            containerElement.addEventListener('scroll', handleScroll);
+        }
+
+        return () => {
+            if (containerElement) {
+                containerElement.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [containerRef]);
+
+
+
+    const handleRefresh = () => {
+        setRefreshFlag((prevPage) => !prevPage)
+    }
 
 
     const addUser = (name, phone) => {
@@ -111,7 +143,10 @@ function App() {
                     <Route index element={<PhoneBox
                         data={data}
                         updateUser={updateUser}
-                        removeUser={removeUser} />} />
+                        removeUser={removeUser}
+                        containerRef={containerRef}
+                        handleRefresh={handleRefresh}
+                        isLoading={isLoading} />} />
                     <Route path="add" element={<PhoneForm add={addUser} />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
