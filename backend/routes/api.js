@@ -26,9 +26,13 @@ router.get('/phonebooks', async (req, res, next) => {
 
         const total = await models.Api.count();
         const page = parseInt(req.query.page) || 1;
-        const limit = 5;
+        const limit = 5
         const offset = (page - 1) * limit;
         const pages = Math.ceil(total / limit);
+
+        // if (page > pages) {
+        //     return res.status(400).json(new Response('Invalid page number', false));
+        // }
 
         const phonebooks = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
