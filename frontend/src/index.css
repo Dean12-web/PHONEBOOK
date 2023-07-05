@@ -141,6 +141,17 @@ li {
       flex-basis: 33.33%;
   }
 }
+@media (max-width: 768px) {
+  /* Mobile view */
+  ul {
+      flex-direction: column;
+  }
+
+  li {
+      flex-basis: auto;
+      width: 100%;
+  }
+}
 
 .search-container {
   display: flex;
