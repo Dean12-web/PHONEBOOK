@@ -1,4 +1,4 @@
-const SearchResultComponent = ({ phonebooks, sortBy, sortMode, onSortChange }) => {
+const SearchResultComponent = ({ phonebooks, sortBy, onSortChange }) => {
     return (
         <div>
             <div>

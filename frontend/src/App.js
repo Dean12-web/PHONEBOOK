@@ -6,11 +6,9 @@ import PhoneBox from './components/PhoneBox';
 import PhoneForm from './components/PhoneForm';
 
 
-function Layout({ handleSearch }) {
+function Layout({ handleSearch, searchQuery, sortBy,onSortChange }) {
     const navigate = useNavigate()
-    const [searchQuery, setSearchQuery] = useState('')
     const handleChange = (e) => {
-        setSearchQuery(e.target.value)
         handleSearch(e.target.value)
     }
     return (
@@ -18,7 +16,9 @@ function Layout({ handleSearch }) {
             <header>
                 <div className="flex-container">
                     <div className="flex-item">
-                        <button className="btn btn-brown float-end me-3">
+                        <button
+                            className="btn btn-brown float-end me-3"
+                            onClick={() => onSortChange(sortBy)}>
                             <span className="fa-solid fa-arrow-up-z-a text-black"></span>
                         </button>
                     </div>
@@ -58,31 +58,41 @@ function App() {
     const [page, setPage] = useState(1)
     const [prevPage, setPrevPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false)
+    const [sortBy, setSortBy] = useState('name')
+    const [sortMode, setSortMode] = useState('desc')
+    const [searchQuery, setSearchQuery] = useState('')
     const containerRef = useRef(null)
+
     useEffect(() => {
         const fetchData = () => {
-            axios.get(`http://localhost:3001/api/phonebooks?page=${page}`).then((response) => {
-                    if(!response.data.data.success){
-                        setIsLoading(true)
-                        return
-                    }
-                    setPrevPage(page)
-                    setData([...data, ...response.data.data.phonebooks]);
-                    const pages = response.data.data.pages
-                    if(page >= pages){
-                        setIsLoading(true)
-                        return
-                    }
+            axios.get(`http://localhost:3001/api/phonebooks?page=${page}`, {
+                params: {
+                    sortBy,
+                    sortMode,
+                    name: searchQuery // Pass search query as parameter
+                }
+            }).then((response) => {
+                if (!response.data.data.success) {
+                    setIsLoading(true)
+                    return
+                }
+                setPrevPage(page)
+                setData([...data, ...response.data.data.phonebooks]);
+                const pages = response.data.data.pages
+                if (page >= pages) {
+                    setIsLoading(true)
+                    return
+                }
             }).catch(() => {
                 setData([])
                 setIsLoading(false)
             })
         };
 
-        if(!isLoading && prevPage !== page){
+        if (!isLoading && prevPage !== page) {
             fetchData();
         }
-    }, [refreshFlag, page, isLoading, prevPage, data]);
+    }, [refreshFlag, page, isLoading, prevPage, data, sortBy, sortMode, searchQuery]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -105,16 +115,26 @@ function App() {
     }, [refreshFlag, containerRef]);
 
     const handleSearch = (query) => {
-        axios.get(`http://localhost:3001/api/phonebooks`, {
-            params: {
-                name: query
-            }
-        }).then((response) => {
-            setData(response.data.data.phonebooks)
-        }).catch(() => {
-
-        })
+        setSearchQuery(query)
+        setPage(1) // Reset page number when searching
+        setPrevPage(0)
+        setData([])
+        setIsLoading(false)
     }
+
+    const handleSortChange = (field) => {
+        if (field === sortBy) {
+            setSortMode(sortMode === 'asc' ? 'desc' : 'asc')
+        } else {
+            setSortBy(field)
+            setSortMode('asc')
+        }
+        setPage(1)
+        setPrevPage(0)
+        setData([])
+        setIsLoading(false)
+    }
+
     const addUser = (name, phone) => {
         const id = parseInt(Date.now())
         console.log(id)
@@ -126,6 +146,7 @@ function App() {
                 }
                 return item
             }))
+            setRefreshFlag((prevFlag) => !prevFlag); // Toggle the refresh flag
         }).catch(() => {
             setData(currentData => currentData.map(item => {
                 if (item.id === id) {
@@ -158,10 +179,17 @@ function App() {
             alert('Hapus Gagal')
         })
     }
+
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Layout handleSearch={handleSearch} />}>
+                <Route path="/" element={<Layout
+                    handleSearch={handleSearch}
+                    searchQuery={searchQuery}
+                    sortBy={sortBy}
+                    sortMode={sortMode}
+                    onSortChange={handleSortChange}
+                />}>
                     <Route index element={<PhoneBox
                         data={data}
                         updateUser={updateUser}

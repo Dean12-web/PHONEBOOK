@@ -7,11 +7,14 @@ const SearchContainer = () => {
     const [phonebooks, setPhonebooks] = useState([])
     const [sortBy, setSortBy] = useState('name')
     const [sortMode, setSortMode] = useState('asc')
+    const [searchQuery, setSearchQuery] = useState('')
+
 
     const fetchData = async () => {
         try {
             const response = await axios.get(`http://localhost:3001/api/phonebooks`, {
                 params: {
+                    name: searchQuery,
                     sortBy,
                     sortMode
                 }
@@ -24,40 +27,19 @@ const SearchContainer = () => {
 
     useEffect(() => {
         fetchData()
-    }, [])
-    const handleSearch = async (query) => {
+    }, [searchQuery, sortBy, sortMode])
 
-        try {
-            const response = await axios.get(`http://localhost:3001/api/phonebooks`, {
-                params: {
-                    name: query
-                }
-            })
-            setPhonebooks(response.data.data.phonebooks)
-        } catch (error) {
-            console.log(error)
-        }
+    const handleSearch = (query) => {
+        setSearchQuery(query)
     }
 
-    const handleSortChange = async (field) => {
+    const handleSortChange = (field) => {
         if (field === sortBy) {
             setSortMode(sortMode === 'asc' ? 'desc' : 'asc')
         } else {
             setSortBy(field)
             setSortMode('asc')
         }
-        try {
-            const response = await axios.get('http://localhost:3001/api/phonebooks', {
-                params: {
-                    sortBy: field,
-                    sortMode: field === sortBy ? (sortMode === 'asc' ? 'desc' : 'asc') : 'asc',
-                },
-            });
-            setPhonebooks(response.data.data.phonebooks);
-        } catch (error) {
-            console.log(error);
-        }
-
     }
     return (
         <div className="search-container">
