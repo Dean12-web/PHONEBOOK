@@ -6,9 +6,13 @@ import PhoneBox from './components/PhoneBox';
 import PhoneForm from './components/PhoneForm';
 
 
-function Layout() {
+function Layout({ handleSearch }) {
     const navigate = useNavigate()
-
+    const [searchQuery, setSearchQuery] = useState('')
+    const handleChange = (e) => {
+        setSearchQuery(e.target.value)
+        handleSearch(e.target.value)
+    }
     return (
         <div className='container'>
             <header>
@@ -21,7 +25,13 @@ function Layout() {
                     <div className="flex-item input-wrapper">
                         <div className="input-icons mt-1">
                             <i className="fa fa-magnifying-glass icon"></i>
-                            <input type="text" className="form-control input-field" />
+                            <input
+                                type="text"
+                                className="form-control input-field"
+                                value={searchQuery}
+                                onChange={handleChange}
+                                placeholder='Search'
+                            />
                         </div>
                     </div>
                     <div className="flex-item">
@@ -46,25 +56,33 @@ function App() {
     const [data, setData] = useState([])
     const [refreshFlag, setRefreshFlag] = useState(false); //Handling For Update Data, make the data refreshed manually when update
     const [page, setPage] = useState(1)
+    const [prevPage, setPrevPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false)
     const containerRef = useRef(null)
     useEffect(() => {
         const fetchData = () => {
-            setIsLoading(true)
             axios.get(`http://localhost:3001/api/phonebooks?page=${page}`).then((response) => {
-                if (response.data.success) {
-                    setData(response.data.data.phonebooks);
-                }
-                console.log('Ini Page', page)
-                setIsLoading(false)
-            }).catch((error) => {
+                    if(!response.data.data.success){
+                        setIsLoading(true)
+                        return
+                    }
+                    setPrevPage(page)
+                    setData([...data, ...response.data.data.phonebooks]);
+                    const pages = response.data.data.pages
+                    if(page >= pages){
+                        setIsLoading(true)
+                        return
+                    }
+            }).catch(() => {
                 setData([])
                 setIsLoading(false)
             })
         };
 
-        fetchData();
-    }, [refreshFlag, page]);
+        if(!isLoading && prevPage !== page){
+            fetchData();
+        }
+    }, [refreshFlag, page, isLoading, prevPage, data]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -84,15 +102,19 @@ function App() {
                 containerElement.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [containerRef]);
+    }, [refreshFlag, containerRef]);
 
+    const handleSearch = (query) => {
+        axios.get(`http://localhost:3001/api/phonebooks`, {
+            params: {
+                name: query
+            }
+        }).then((response) => {
+            setData(response.data.data.phonebooks)
+        }).catch(() => {
 
-
-    const handleRefresh = () => {
-        setRefreshFlag((prevPage) => !prevPage)
+        })
     }
-
-
     const addUser = (name, phone) => {
         const id = parseInt(Date.now())
         console.log(id)
@@ -118,8 +140,8 @@ function App() {
         axios.put(`http://localhost:3001/api/phonebooks/${id}`, { name, phone }).then((response) => {
             setData(currentData => currentData.map(item => {
                 if (item.id === id) {
-                    item.name = response.data.data.name
-                    item.phone = response.data.data.phone
+                    item.name = name
+                    item.phone = phone
                 }
                 return item
             }))
@@ -139,13 +161,12 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Layout />}>
+                <Route path="/" element={<Layout handleSearch={handleSearch} />}>
                     <Route index element={<PhoneBox
                         data={data}
                         updateUser={updateUser}
                         removeUser={removeUser}
                         containerRef={containerRef}
-                        handleRefresh={handleRefresh}
                         isLoading={isLoading} />} />
                     <Route path="add" element={<PhoneForm add={addUser} />} />
                     <Route path="*" element={<NotFound />} />

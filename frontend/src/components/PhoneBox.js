@@ -1,6 +1,6 @@
 import PhoneList from "./PhoneList"
 
-export default function PhoneBox({data, updateUser, removeUser, isLoading, containerRef,handleRefresh}) {
+export default function PhoneBox({data, updateUser, removeUser, isLoading, containerRef}) {
     return (
         <div className="container mt-3">
             <main className="mt-3">
@@ -9,7 +9,6 @@ export default function PhoneBox({data, updateUser, removeUser, isLoading, conta
                     update={updateUser}
                     remove={removeUser}
                     containerRef={containerRef}
-                    handleRefresh={handleRefresh}
                     isLoading={isLoading}/>
             </main>
         </div>

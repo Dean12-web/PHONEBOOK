@@ -7,10 +7,10 @@ const { Response } = require('../helpers/util')
 
 /* GET users listing. */
 router.get('/phonebooks', async (req, res, next) => {
-    try {
+    try { 
         const { name, phone } = req.query;
         let params = {};
-        let sortBy = req.query.sortBy || 'id';
+        let sortBy = req.query.sortBy || 'name';
         let sortMode = req.query.sortMode || 'asc';
 
         if (name && phone) {
@@ -29,11 +29,14 @@ router.get('/phonebooks', async (req, res, next) => {
         const limit = 10;
         const offset = (page - 1) * limit;
         const pages = Math.ceil(total / limit);
+        // if (page >= pages) {
+        //     return res.status(400).json(new Response('Invalid page number', false));
+        // }
 
         const phonebooks = await models.Api.findAll({
             attributes: ['id', 'name', 'phone', 'avatar'],
             where: params,
-            order: [['id', 'DESC']],
+            order: [[sortBy, sortMode]],
             limit,
             offset,
         });

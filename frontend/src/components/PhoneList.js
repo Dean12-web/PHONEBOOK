@@ -1,7 +1,7 @@
 import PhoneItem from "./PhoneItem"
-export default function PhoneList({ users, remove, update, isLoading, containerRef,handleRefresh, }) {
+export default function PhoneList({ users, remove, update, isLoading, containerRef}) {
     return (
-        <div ref={containerRef} style={{ height:'250px', overflow:'auto' }}>
+        <div ref={containerRef} style={{ height:'250px', overflowY:"scroll" }}>
             <ul>
                 {
                     users.map((user) => (
@@ -12,8 +12,6 @@ export default function PhoneList({ users, remove, update, isLoading, containerR
                             remove={() => remove(user.id)} />
                     ))
                 }
-                {isLoading && <p>Loading...</p>}
-                {/* <button className="btn btn-brown" onClick={handleRefresh}>refresh</button> */}
             </ul>
         </div>
     )
