@@ -98,6 +98,7 @@ function App() {
         const handleScroll = () => {
             const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
             if (scrollTop + clientHeight >= scrollHeight - 5) {
+                // dispatch({type:'UPDATE_PARAMS',params:{page:getState().pagination.prevPage + 1}})
                 setPage((prevPage) => prevPage + 1);
             }
         };
@@ -174,6 +175,7 @@ function App() {
 
     const removeUser = (id) => {
         axios.delete(`http://localhost:3001/api/phonebooks/${id}`).then((response) => {
+            // window.location.reload(); // Refresh the page
             setData(data.filter(item => item.id !== id))
         }).catch(() => {
             alert('Hapus Gagal')

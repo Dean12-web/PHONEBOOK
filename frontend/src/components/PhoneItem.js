@@ -29,7 +29,7 @@ export default function PhoneItem({ user, remove, update, updateAvatar }) {
         <li className="card bg-secondary mb-1">
             <div className="image">
                 <img src={user.avatar ? `http://localhost:3001/images/${user.avatar}` : '/profile.png'}
-                    className="img-fluid"
+                    className="img-fluid-cover" 
                     alt=""
                     onClick={handleImageClick} />
             </div>

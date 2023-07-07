@@ -26,7 +26,7 @@ router.get('/phonebooks', async (req, res, next) => {
 
         const total = await models.Api.count();
         const page = parseInt(req.query.page) || 1;
-        const limit = 10;
+        const limit = 15;
         const offset = (page - 1) * limit;
         const pages = Math.ceil(total / limit);
         // if (page >= pages) {

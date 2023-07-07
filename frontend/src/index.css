@@ -150,8 +150,14 @@ li {
   li {
       flex-basis: auto;
       width: 100%;
+
+  }
+
+  .card{
+    width: 100%;
   }
 }
+
 
 .search-container {
   display: flex;
@@ -160,4 +166,11 @@ li {
   justify-content: center;
   height: 100vh;
   text-align: center;
+}
+
+.img-fluid-cover{
+  width: 89px;
+  height: 80px;
+  border-radius: 50px;
+  object-fit: cover;
 }
